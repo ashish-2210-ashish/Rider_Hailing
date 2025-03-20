@@ -14,8 +14,13 @@ public class Rider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int riderId;
+    @OneToOne
+    @JoinColumn(name = "userId")
+    User user;
     @Column(nullable = false)
     double coordinateX;
+    @Column(nullable = false)
+    boolean online=true;
     @Column(nullable = false)
     double coordinateY;
     @OneToMany(mappedBy = "rider", cascade = CascadeType.ALL, orphanRemoval = true)

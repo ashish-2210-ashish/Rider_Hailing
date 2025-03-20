@@ -17,6 +17,10 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int driverId;
 
+    @OneToOne
+    @JoinColumn(name = "userId")
+    User user;
+
     @Column(nullable = false)
     private double coordinateX;
 
@@ -29,4 +33,5 @@ public class Driver {
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Ride> rides;
+
 }

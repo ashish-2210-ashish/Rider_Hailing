@@ -1,8 +1,12 @@
 package com.example.Rider_Co.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.engine.internal.Cascade;
+
+import java.util.List;
 
 
 @Entity
@@ -22,5 +26,13 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role; // "RIDER" or "DRIVER"
+    private String role;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private Rider rider;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private Driver driver;
 }
