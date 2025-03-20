@@ -1,24 +1,34 @@
 package com.example.Rider_Co.services;
 
+import com.example.Rider_Co.jwtUtils.JwtAuthFilter;
+import com.example.Rider_Co.jwtUtils.JwtUtil;
 import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
+import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
+import com.example.Rider_Co.repositories.UserRepository;
 import com.example.Rider_Co.serviceInterfaces.DriverServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DriverService implements DriverServiceInterface {
 
+
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private RideRepository rideRepository;
@@ -56,12 +66,20 @@ public class DriverService implements DriverServiceInterface {
      * @param driver Driver object to be added.
      * @return Success message.
      */
+
     @Override
     public String AddDriver(Driver driver) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return "User not found.";
+        }
+        driver.setUser(userOptional.get());
         driverRepository.save(driver);
         logger.info("Driver with ID: {} added successfully", driver.getDriverId());
         return "Successfully added the driver with ID: " + driver.getDriverId();
     }
+
 
     /**
      * Updates an existing driver's details.

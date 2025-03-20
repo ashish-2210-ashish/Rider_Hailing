@@ -3,8 +3,11 @@ package com.example.Rider_Co.services;
 import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
+import com.example.Rider_Co.models.Rider;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
+import com.example.Rider_Co.repositories.RiderRepository;
+import com.example.Rider_Co.repositories.UserRepository;
 import com.example.Rider_Co.serviceInterfaces.DriverServiceInterface;
 import com.example.Rider_Co.serviceInterfaces.RideServiceInterface;
 import org.slf4j.Logger;
@@ -22,6 +25,9 @@ public class RideService implements RideServiceInterface {
 
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private RiderRepository riderRepository;
 
     @Autowired
     private DriverServiceInterface driverService;
@@ -60,6 +66,8 @@ public class RideService implements RideServiceInterface {
     @Override
     public String stopRide(int rideId, double timeTaken) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
+        Rider currentRider=currentRide.getRider();
+
 
         if (currentRide == null) {
             logger.warn("Ride {} not found, cannot stop.", rideId);
@@ -79,6 +87,10 @@ public class RideService implements RideServiceInterface {
         currentRide.setTimeTaken(timeTaken);
         currentRide.setStatus(RideStatus.COMPLETED);
         rideRepository.save(currentRide);
+
+
+        currentRider.setOnline(false);
+        riderRepository.save(currentRider);
 
         Driver currentDriver = driverRepository.findById(currentRide.getDriver().getDriverId()).orElse(null);
         assert currentDriver != null;

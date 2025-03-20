@@ -3,13 +3,16 @@ package com.example.Rider_Co.services;
 import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.Rider;
+import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
 import com.example.Rider_Co.repositories.RiderRepository;
+import com.example.Rider_Co.repositories.UserRepository;
 import com.example.Rider_Co.serviceInterfaces.RiderServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,9 @@ public class RiderService implements RiderServiceInterface {
 
     @Autowired
     private RideRepository rideRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private DriverRepository driverRepository;
@@ -60,6 +66,13 @@ public class RiderService implements RiderServiceInterface {
      */
     @Override
     public String addRider(Rider rider) {
+
+        String username =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> optionalUser=userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()){
+            return "user doesn't exists \n";
+        }
+        rider.setUser(optionalUser.get());
         riderRepository.save(rider);
         logger.info("Rider with ID: {} added successfully", rider.getRiderId());
         return "Successfully added the rider with ID: " + rider.getRiderId();
