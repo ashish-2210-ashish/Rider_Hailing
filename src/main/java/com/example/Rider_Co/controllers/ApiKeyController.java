@@ -24,10 +24,10 @@ public class ApiKeyController {
     private static final Logger logger= LoggerFactory.getLogger(ApiKeyController.class);
 
     @PostMapping
-    public ResponseEntity<String> createApi(@RequestBody ApiKeyManager apiKeyManager){
+    public ResponseEntity<String> createApi(){
         try {
             String apiKey = apiKeyService.createApiKey();
-            logger.info("API key created successfully -> API key : {}", apiKey);
+            logger.info("API key created successfully -> API key : {} ", apiKey);
             return  ResponseEntity.status(HttpStatus.CREATED).body(apiKey);
         }
         catch (Exception e){

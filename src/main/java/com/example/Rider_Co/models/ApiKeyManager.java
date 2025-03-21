@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -24,16 +25,13 @@ public class ApiKeyManager {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(nullable = false)
-    private  String password;
+    private  String hashesdKey;
 
     @Column(nullable = false)
-    private ApiScopes apiScopes;
+    private LocalDateTime createdTime;
 
     @Column(nullable = false)
-    private Timestamp createdTime;
-
-    @Column(nullable = false)
-    private Timestamp expiringTime;
+    private LocalDateTime expiringTime;
 
 
 }
