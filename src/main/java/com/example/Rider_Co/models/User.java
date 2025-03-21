@@ -38,7 +38,7 @@ public class User {
     @JsonIgnore
     private Driver driver;
 
-    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
-    private ApiKeyManager apiKeyManager;
+    private List<ApiKeyManager> apiKeyManager;
 }

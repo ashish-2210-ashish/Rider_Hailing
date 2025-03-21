@@ -4,6 +4,8 @@ import com.example.Rider_Co.models.ApiKeyManager;
 import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.repositories.ApiKeyRepository;
 import com.example.Rider_Co.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,12 +14,15 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class ApiKeyService {
 
+
+    private static  final Logger logger= LoggerFactory.getLogger(ApiKeyService.class);
 
     @Autowired
     ApiKeyRepository apiKeyRepository;
@@ -29,6 +34,7 @@ public class ApiKeyService {
 
     public String createApiKey() {
 
+
         ApiKeyManager currentApiKeyManager=new ApiKeyManager();
         String username= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -36,20 +42,36 @@ public class ApiKeyService {
             return "user not found .";
         }
 
-        String rawApiKey= UUID.randomUUID().toString().replace("-","");
-        String hashedApiKey= passwordEncoder.encode(rawApiKey);
+        if(userOptional.get().getApiKeyManager().size()>=3){
+            logger.info("user already has 3 API keys and they are :  {}",userOptional.get().getApiKeyManager());
+            return "\n A user can have maximum of 3 keys , so delete any of your existing key to create a new key ..\n";
+        }else {
 
-        String apiKeyIdentifier="..............."+rawApiKey.substring(rawApiKey.length()-6);
+            String rawApiKey= UUID.randomUUID().toString().replace("-","");
+            String hashedApiKey= passwordEncoder.encode(rawApiKey);
 
-        currentApiKeyManager.setUser(userOptional.get());
-        currentApiKeyManager.setCreatedTime(LocalDateTime.now());
-        currentApiKeyManager.setExpiringTime(LocalDateTime.now().plusMonths(6));
-        currentApiKeyManager.setHashesdKey(hashedApiKey);
-        currentApiKeyManager.setApiKeyIdentifier(apiKeyIdentifier);
+            String apiKeyIdentifier="..............."+rawApiKey.substring(rawApiKey.length()-6);
 
-        apiKeyRepository.save(currentApiKeyManager);
+            currentApiKeyManager.setUser(userOptional.get());
+            currentApiKeyManager.setCreatedTime(LocalDateTime.now());
+            currentApiKeyManager.setExpiringTime(LocalDateTime.now().plusMonths(6));
+            currentApiKeyManager.setHashesdKey(hashedApiKey);
+            currentApiKeyManager.setApiKeyIdentifier(apiKeyIdentifier);
 
-        return "\nYour API Key is   "+rawApiKey+"   and it will be displayed once , so better note it down ..\n\n";
+            apiKeyRepository.save(currentApiKeyManager);
+
+            return "\nYour API Key is   "+rawApiKey+"   and it will be displayed once , so better note it down ..\n\n";
+
+        }
+    }
+
+    public List<ApiKeyManager> getApiKeysList() {
+
+        ApiKeyManager currentApiKeyManager=new ApiKeyManager();
+        String username= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user=userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user not found"));
+
+        return apiKeyRepository.findByUserId(user.getId());
 
     }
 }

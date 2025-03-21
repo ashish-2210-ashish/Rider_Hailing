@@ -16,14 +16,14 @@ public class ApiKeyManager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int apiId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     User user;
 
     @Column(nullable = false)
     private String apiKeyIdentifier;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private  String hashesdKey;
 
