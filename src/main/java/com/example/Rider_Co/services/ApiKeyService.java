@@ -22,7 +22,7 @@ import java.util.UUID;
 public class ApiKeyService {
 
 
-    private static  final Logger logger= LoggerFactory.getLogger(ApiKeyService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiKeyService.class);
 
     @Autowired
     ApiKeyRepository apiKeyRepository;
@@ -30,27 +30,27 @@ public class ApiKeyService {
     @Autowired
     UserRepository userRepository;
 
-    private  final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public String createApiKey() {
 
 
-        ApiKeyManager currentApiKeyManager=new ApiKeyManager();
-        String username= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ApiKeyManager currentApiKeyManager = new ApiKeyManager();
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isEmpty()){
+        if (userOptional.isEmpty()) {
             return "user not found .";
         }
 
-        if(userOptional.get().getApiKeyManager().size()>=3){
-            logger.info("user already has 3 API keys and they are :  {}",userOptional.get().getApiKeyManager());
+        if (userOptional.get().getApiKeyManager().size() >= 3) {
+            logger.info("user already has 3 API keys and they are :  {}", userOptional.get().getApiKeyManager());
             return "\n A user can have maximum of 3 keys , so delete any of your existing key to create a new key ..\n";
-        }else {
+        } else {
 
-            String rawApiKey= UUID.randomUUID().toString().replace("-","");
-            String hashedApiKey= passwordEncoder.encode(rawApiKey);
+            String rawApiKey = UUID.randomUUID().toString().replace("-", "");
+            String hashedApiKey = passwordEncoder.encode(rawApiKey);
 
-            String apiKeyIdentifier="..............."+rawApiKey.substring(rawApiKey.length()-6);
+            String apiKeyIdentifier = "..............." + rawApiKey.substring(rawApiKey.length() - 6);
 
             currentApiKeyManager.setUser(userOptional.get());
             currentApiKeyManager.setCreatedTime(LocalDateTime.now());
@@ -60,18 +60,35 @@ public class ApiKeyService {
 
             apiKeyRepository.save(currentApiKeyManager);
 
-            return "\nYour API Key is   "+rawApiKey+"   and it will be displayed once , so better note it down ..\n\n";
+            return "\nYour API Key is   " + rawApiKey + "   and it will be displayed once , so better note it down ..\n\n";
 
         }
     }
 
     public List<ApiKeyManager> getApiKeysList() {
 
-        ApiKeyManager currentApiKeyManager=new ApiKeyManager();
-        String username= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user=userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user not found"));
+        ApiKeyManager currentApiKeyManager = new ApiKeyManager();
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user not found"));
 
         return apiKeyRepository.findByUserId(user.getId());
 
     }
+
+    public String deleteApiKey(String apiKeyIdentifier) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user not found .."));
+
+        ApiKeyManager apiKeyManager = apiKeyRepository.findByApiKeyIdentifier("..............." + apiKeyIdentifier).orElseThrow(() -> new RuntimeException("provided API key is invalid"));
+
+        if (user.getId() == apiKeyManager.getUser().getId()) {
+            apiKeyRepository.delete(apiKeyManager);
+            return "\n specified API key end with "+ apiKeyIdentifier+" is deleted successfully ..\n ";
+        } else {
+            return "\nyou don't have credentials to delete the specified api key , only owner can delete it ...\n";
+        }
+
+    }
 }
+
+

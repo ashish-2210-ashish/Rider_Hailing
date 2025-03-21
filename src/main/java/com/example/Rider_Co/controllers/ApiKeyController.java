@@ -40,5 +40,10 @@ public class ApiKeyController {
 
     }
 
+    @DeleteMapping("/{apiKeyIdentifier}")
+    public ResponseEntity<String> deleteApiKey(@PathVariable String apiKeyIdentifier ){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(apiKeyService.deleteApiKey(apiKeyIdentifier));
+    }
+
 
 }

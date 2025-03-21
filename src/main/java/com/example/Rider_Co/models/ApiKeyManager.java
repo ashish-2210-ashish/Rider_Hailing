@@ -33,5 +33,4 @@ public class ApiKeyManager {
     @Column(nullable = false)
     private LocalDateTime expiringTime;
 
-
 }
