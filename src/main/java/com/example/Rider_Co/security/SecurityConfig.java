@@ -16,8 +16,11 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
+//    @Value("${security.jwt.enabled}")
+//    private boolean jwtEnabled;
+
     @Value("${security.whitelist}")
-    private String[] whitelist;  // Reads comma-separated values as array
+    private String[] whitelist;
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
@@ -33,6 +36,17 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(whitelist).permitAll()  // Apply whitelist here
+//                        .anyRequest().authenticated()
+//                )
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        if (jwtEnabled){
+//            http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//        }
 
         return http.build();
     }
