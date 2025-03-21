@@ -37,4 +37,8 @@ public class User {
     @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore
     private Driver driver;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private ApiKeyManager apiKeyManager;
 }
