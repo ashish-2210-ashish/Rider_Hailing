@@ -1,4 +1,4 @@
-package com.example.Rider_Co.jwtUtils;
+package com.example.Rider_Co.utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

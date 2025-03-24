@@ -1,5 +1,5 @@
 
-package com.example.Rider_Co.jwtUtils;
+package com.example.Rider_Co.authFilters;
 
 import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.repositories.UserRepository;

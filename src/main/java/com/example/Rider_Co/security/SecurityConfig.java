@@ -1,7 +1,7 @@
 package com.example.Rider_Co.security;
 
-import com.example.Rider_Co.jwtUtils.JwtAuthFilter;
-import com.example.Rider_Co.jwtUtils.ApiKeyAuthFilter;
+import com.example.Rider_Co.authFilters.JwtAuthFilter;
+import com.example.Rider_Co.authFilters.ApiKeyAuthFilter;
 import com.example.Rider_Co.repositories.ApiKeyRepository;
 import com.example.Rider_Co.services.ApiKeyService;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,7 +1,5 @@
 package com.example.Rider_Co.services;
 
-import com.example.Rider_Co.jwtUtils.JwtAuthFilter;
-import com.example.Rider_Co.jwtUtils.JwtUtil;
 import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
