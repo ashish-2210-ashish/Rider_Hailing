@@ -1,1 +1,2 @@
 Rider_Co
+![ER-DIAGRAM](ER-DIAGRAM.png)
