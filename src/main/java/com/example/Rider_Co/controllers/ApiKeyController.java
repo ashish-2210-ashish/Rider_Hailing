@@ -1,6 +1,7 @@
 package com.example.Rider_Co.controllers;
 
 import com.example.Rider_Co.models.ApiKeyManager;
+import com.example.Rider_Co.serviceInterfaces.ApiKeyServiceInterface;
 import com.example.Rider_Co.services.ApiKeyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ApiKeyController {
 
     @Autowired
-    ApiKeyService apiKeyService;
+    ApiKeyServiceInterface apiKeyService;
 
     private static final Logger logger= LoggerFactory.getLogger(ApiKeyController.class);
 
