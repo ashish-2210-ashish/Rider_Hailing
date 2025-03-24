@@ -68,6 +68,7 @@ public class RiderService implements RiderServiceInterface {
     public String addRider(Rider rider) {
 
         String username =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info("username is {} \n\n",username);
         Optional<User> optionalUser=userRepository.findByUsername(username);
         if (optionalUser.isEmpty()){
             return "user doesn't exists \n";

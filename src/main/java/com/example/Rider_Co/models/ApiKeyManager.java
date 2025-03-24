@@ -3,12 +3,16 @@ package com.example.Rider_Co.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Getter
+@Setter
 @Table(name ="ApiKeyManager")
 public class ApiKeyManager {
 
@@ -32,5 +36,6 @@ public class ApiKeyManager {
 
     @Column(nullable = false)
     private LocalDateTime expiringTime;
+
 
 }

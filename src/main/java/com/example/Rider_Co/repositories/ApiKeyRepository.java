@@ -16,4 +16,6 @@ public interface ApiKeyRepository extends JpaRepository<ApiKeyManager,Integer> {
 
     Optional<ApiKeyManager> findByApiKeyIdentifier(String apiKeyIdentifier);
 
+//    Optional<ApiKeyManager> findByApiKey(String apiKey);
+
 }
