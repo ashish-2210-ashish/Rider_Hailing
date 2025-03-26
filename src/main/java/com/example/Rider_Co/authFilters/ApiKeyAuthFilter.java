@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -17,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-
+import java.util.List;
 
 
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
@@ -52,11 +53,14 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                 if (passwordEncoder.matches(apiKeyHeader, apiKeyManager.getHashesdKey())) {
 
                     String username = apiKeyManager.getUser().getUsername();
+                    String role=apiKeyManager.getUser().getRole();
 
-                    logger.info("\n user with user id : {}  is trying to use the api end points  ..\n ",username);
+                    logger.info("\n user with user id : {} and role : {} is trying to use the api end points  ..\n ",username,role);
+
+                    SimpleGrantedAuthority authority=new SimpleGrantedAuthority("ROLE_"+role.toUpperCase());
 
                     UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+                            new UsernamePasswordAuthenticationToken(username, null, List.of(authority));
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                     break;
