@@ -1,2 +1,3 @@
 Rider_Co
-![ER-DIAGRAM](ER-DIAGRAM.png)
+![ER-DIAGRAM](diagrams/ER-DIAGRAM.png)
+![FLOW-DIAGRAM](diagrams/FLOW_DIAGRAM.png)
