@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.security.Key;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -88,8 +90,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             int userid = userOptional.get().getId();
             logger.info("Request from the user: {} with user Id: {}", username, userid);
 
+            Claims claims=extractClaims(token);
+            String role=(String) claims.get("role");
+
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+                    new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority("ROLE_"+role.toUpperCase())));
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

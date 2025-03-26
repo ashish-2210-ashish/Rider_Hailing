@@ -25,7 +25,7 @@ public class DriverController {
      * Retrieves a list of all drivers.
      * @return List of drivers and HTTP status
      */
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Driver>> getAllDrivers() {
         try {
             logger.info("Fetching all drivers");

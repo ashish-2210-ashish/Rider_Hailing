@@ -45,9 +45,14 @@ public class SecurityConfig {
                                                    ApiKeyAuthFilter apiKeyAuthFilter) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(whitelist).permitAll()
-                        .anyRequest().authenticated()
-                )
+                                .requestMatchers(whitelist).permitAll()
+                                .requestMatchers("/driver/**", "/ride/**").hasRole("DRIVER")
+                                .requestMatchers("/rider/**").hasRole("RIDER")
+                                .requestMatchers("/api/**").hasAnyRole("DRIVER", "RIDER")
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+        )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)  // API Key first
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);    // Then JWT
