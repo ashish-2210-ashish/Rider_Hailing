@@ -28,7 +28,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role;
+    private String role;  //either 'DRIVER' OR 'RIDER'
 
     @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonIgnore

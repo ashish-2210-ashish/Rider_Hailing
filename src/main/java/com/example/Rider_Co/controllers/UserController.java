@@ -31,7 +31,7 @@ public class UserController {
         Optional<User> loggedInUser = userService.authenticate(user.getUsername(), user.getPassword());
 
         if (loggedInUser.isPresent()) {
-            String token = jwtUtil.generateToken(user.getUsername());
+            String token = jwtUtil.generateToken(user.getUsername(),loggedInUser.get().getRole());
             return ResponseEntity.ok().body("{\"token\": \"" + token + "\"}");
         } else {
             return ResponseEntity.status(401).body("Invalid username or password");
