@@ -57,6 +57,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+
+        System.out.println("remote host :" + request.getRemoteHost());
+        System.out.println("remote addr ; "+ request.getRemoteAddr());
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
