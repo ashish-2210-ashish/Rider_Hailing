@@ -1,72 +1,26 @@
-import React ,{ Component } from "react"
-import axios from "axios";
+import { Component } from "react";
+import Register from "./components/RegisterComponent/Register";
+import Login from "./components/LoginComponent/Login";
+import Home from "./components/HomeComponent/Home";
+import { BrowserRouter as Router,Route ,Routes , Navigate} from "react-router-dom";
+import './App.scss'
 
-type RegisterState={
-  username :string;
-  password :string;
-  role :string;
-}
-
-
-class App extends Component<{},RegisterState>{
-
-constructor(){
-  super();
-  this.state={
-    username:"",
-    password:"",
-    role:"RIDER"
-  }
-
-}
-
-handelsubmit=async(event : React.FormEvent)=>{
-  event.preventDefault();
-  try{
-    await axios.post("http://localhost:8080/user/register",this.state);
-    alert("Registered successfully ...");
-  }
-  catch(e){
-    alert("Registered failed ...")
-    console.error(e);
-  }
-}
-
-handelchange=(event:any)=>{
-  this.setState({[event.target.name] : event.target.value})
-
-}
-
-render(){
-  return(
-    <form onSubmit={this.handelsubmit}>
-      <h1>Register</h1>
-      <input name="username"
-      placeholder="enter username"
-      type="email"
-      value={this.state.username}
-      onChange={this.handelchange}
-      />
-
-     <input name="password"
-      placeholder="enter password"
-      type="password"
-      value={this.state.password}
-      onChange={this.handelchange}
-      />
-
-    <select name="role" value={this.state.role} onChange={this.handleChange}>
-          <option value="RIDER">RIDER</option>
-          <option value="ADMIN">ADMIN</option>
-        </select>
-
-        <button type="submit">Register</button>
+class App extends Component {
+  render() {
+    return (
+      <Router>
+         <div id='application-container'>
+        <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={< Login/>} />
+          <Route path="/register" element={< Register/>} />
+          <Route path="/home" element={< Home/>} />
+        </Routes>
+      </div>
+      </Router>
      
-     
-    </form>
-    
-  )}
+    );
+  }
 }
 
-
-export default App
+export default App;
