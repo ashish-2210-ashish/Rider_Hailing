@@ -1,5 +1,5 @@
 
-```markdown
+
 # Rider_Co: Setup Guide for IntelliJ IDEA, MySQL, and Docker on Ubuntu
 
 This guide provides a step-by-step walkthrough to install and configure IntelliJ IDEA, MySQL, and Docker (in rootless mode) on Ubuntu for Rider_Co development.
