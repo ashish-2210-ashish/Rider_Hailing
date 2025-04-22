@@ -199,3 +199,217 @@ Include project-specific visuals below:
 ![FLOW-DIAGRAM](diagrams/FLOW_DIAGRAM.png)
 ```
 
+
+
+# API Documentation
+
+## User Authentication
+
+### Login
+```bash
+curl -X POST 'http://localhost:8080/user/login' \
+     -H "Content-Type: application/json" \
+     -d '{"username":"ash@gmail.com", "password":"ash"}'
+```
+Returns a JWT token upon successful login.
+
+### Register
+```bash
+curl -X POST 'http://localhost:8080/user/register' \
+     -H "Content-Type: application/json" \
+     -d '{"username":"ash@gmail.com", "password":"ash", "role":"DRIVER"}'
+```
+
+---
+
+## API Key Management
+
+### Create a New API Key
+```bash
+curl -X POST http://localhost:8080/api \
+     -H "Authorization: Bearer <your_jwt_token>"
+```
+
+### Get All API Keys for the Current User
+```bash
+curl -X GET http://localhost:8080/api \
+     -H "Authorization: Bearer <your_jwt_token>"
+```
+
+### Delete an API Key by Identifier
+```bash
+curl -X DELETE http://localhost:8080/api/{apikey_identifier} \
+     -H "Authorization: Bearer <your_jwt_token>"
+```
+
+---
+
+## Driver Endpoints
+
+### Get All Drivers
+```bash
+curl -X GET http://localhost:8080/driver \
+     -H "Authorization: Bearer <your-jwt-token>"
+```
+
+### Get Driver by ID
+```bash
+curl -X GET http://localhost:8080/driver/{driverid} \
+     -H "Authorization: Bearer <your-jwt-token>"
+```
+
+### Add New Driver
+```bash
+curl -X POST http://localhost:8080/driver \
+     -H "Authorization: Bearer <your-jwt-token>" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "coordinateX": 40.7128,
+           "coordinateY": -74.0060
+         }'
+```
+
+### Update Driver
+```bash
+curl -X PUT http://localhost:8080/driver/{driverid} \
+     -H "Authorization: Bearer <your-jwt-token>" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "coordinateX": 41.0000,
+           "coordinateY": -75.0000
+         }'
+```
+
+### Delete Driver
+```bash
+curl -X DELETE http://localhost:8080/driver/{driverid} \
+     -H "Authorization: Bearer <your-jwt-token>"
+```
+
+### Accept Ride
+```bash
+curl -X POST http://localhost:8080/driver/acceptRide/{driverid}/{rideid} \
+     -H "Authorization: Bearer <your-jwt-token>"
+```
+
+### Get Available Rides for a Driver
+```bash
+curl -X GET http://localhost:8080/driver/availableRides/{driverid} \
+     -H "Authorization: Bearer <your-jwt-token>"
+```
+
+---
+
+## Rider Endpoints
+
+### Get All Riders
+```bash
+curl -X GET http://localhost:8080/rider \
+     -H "Authorization: Bearer {{JWT_TOKEN}}"
+```
+
+### Get Rider by ID
+```bash
+curl -X GET http://localhost:8080/rider/{{riderId}} \
+     -H "Authorization: Bearer {{JWT_TOKEN}}"
+```
+
+### Add New Rider
+```bash
+curl -X POST http://localhost:8080/rider \
+     -H "Authorization: Bearer {{JWT_TOKEN}}" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "coordinateX": 12.34,
+           "coordinateY": 56.78
+         }'
+```
+
+### Update Rider
+```bash
+curl -X PUT http://localhost:8080/rider/{{riderId}} \
+     -H "Authorization: Bearer {{JWT_TOKEN}}" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "coordinateX": 98.76,
+           "coordinateY": 54.32,
+           "online": true
+         }'
+```
+
+### Delete Rider
+```bash
+curl -X DELETE http://localhost:8080/rider/{{riderId}} \
+     -H "Authorization: Bearer {{JWT_TOKEN}}"
+```
+
+### Match Drivers
+```bash
+curl -X POST http://localhost:8080/rider/match/{{riderId}} \
+     -H "Authorization: Bearer {{JWT_TOKEN}}" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "destinationCoordinateX": 100.0,
+           "destinationCoordinateY": 200.0
+         }'
+```
+
+---
+
+## Ride Endpoints
+
+### Get All Rides
+```bash
+curl -X GET http://localhost:8080/ride \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Get Ride by ID
+```bash
+curl -X GET http://localhost:8080/ride/{rideid} \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Delete Ride by ID
+```bash
+curl -X DELETE http://localhost:8080/ride/{rideid} \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Stop Ride (Provide Time Taken)
+```bash
+curl -X PUT http://localhost:8080/ride/stop/{rideid} \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d "120.5"
+```
+
+### Start Ride
+```bash
+curl -X PUT http://localhost:8080/ride/start/{driverid}/{rideid} \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Bill a Ride
+```bash
+curl -X GET http://localhost:8080/ride/bill/{rideid} \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Cancel a Ride
+```bash
+curl -X PUT http://localhost:8080/ride/cancel/{rideid} \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Get Ride History by Rider
+```bash
+curl -X GET http://localhost:8080/ride/history/rider/3 \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Get Ride History by Driver
+```bash
+curl -X GET http://localhost:8080/ride/history/driver/5 \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
