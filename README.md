@@ -1,6 +1,3 @@
-Here’s the cleaned-up and properly merged version of your Markdown guide, with everything structured professionally and without any extra commentary or chat-style tone — it looks exactly like a setup document you'd provide to a dev team:
-
----
 
 ```markdown
 # Rider_Co: Setup Guide for IntelliJ IDEA, MySQL, and Docker on Ubuntu
