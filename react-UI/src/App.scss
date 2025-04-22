@@ -1,0 +1,22 @@
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+  }
+
+  #application-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  }
