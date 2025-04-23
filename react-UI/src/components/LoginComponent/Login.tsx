@@ -1,11 +1,14 @@
 import React,{Component} from "react";
 import axios from "axios";
 import { Link,Navigate,useNavigate } from "react-router-dom";
+import { FaEyeSlash,FaEye } from "react-icons/fa";
+import { getUserRole } from "../../utils/auth";
 import './Login.scss'
 
 type LoginState={
     username : string;
     password : string; 
+    showpassword : boolean;
 }
 
 type LoginProps={
@@ -19,7 +22,8 @@ class Login extends Component<LoginProps,LoginState>{
 
         this.state={
             username:"",
-            password:""
+            password:"",
+            showpassword:false
         }
     }
 
@@ -46,7 +50,22 @@ class Login extends Component<LoginProps,LoginState>{
             }
 
             sessionStorage.setItem("session",JSON.stringify(sessionData));
-            this.props.navigate("/home");
+            getUserRole();
+
+            
+            const userDetails=sessionStorage.getItem("userDetails")
+            const role = userDetails ? JSON.parse(userDetails).role : "unknown";
+
+            console.log(role)
+
+            if (role === "DRIVER"){
+                this.props.navigate("/driverHome")
+            }else if (role === "RIDER"){
+                this.props.navigate("/riderHome")
+            }else{
+                this.props.navigate("/home");
+            }
+
             
         }
         catch(e){
@@ -71,12 +90,21 @@ class Login extends Component<LoginProps,LoginState>{
                 onChange={this.handlechange}
                 />
 
-                <input name="password"
-                placeholder="enter password"
-                type="password"
-                value={this.state.password}
-                onChange={this.handlechange}
-                />
+                <div className="password-wrapper">
+                    <input name="password"
+                    placeholder="enter password"
+                    type={this.state.showpassword ? "text":"password"}
+                    value={this.state.password}
+                    onChange={this.handlechange}
+                    />
+
+                    <span 
+                    className="eye-icon"
+                    onClick={()=>{this.setState({showpassword:!this.state.showpassword})}}>
+                        {this.state.showpassword?<FaEyeSlash/> : <FaEye/>}
+                    </span>
+
+                </div>
 
                 <button type="submit"> Login</button>
 
