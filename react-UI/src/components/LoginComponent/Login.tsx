@@ -2,7 +2,6 @@ import React,{Component} from "react";
 import axios from "axios";
 import { Link,Navigate,useNavigate } from "react-router-dom";
 import { FaEyeSlash,FaEye } from "react-icons/fa";
-import { getUserRole } from "../../utils/auth";
 import './Login.scss'
 
 type LoginState={
@@ -37,7 +36,7 @@ class Login extends Component<LoginProps,LoginState>{
         }
 
         try{
-            const response = await axios.post("http://localhost:8080/user/login",this.state);
+            const response = await axios.post("http://localhost:8080/user/login",this.state,{withCredentials:true});
             alert('successfully logined ...');
             const jwt_token=response.data.token;
             console.log('token = ',jwt_token)
@@ -49,22 +48,7 @@ class Login extends Component<LoginProps,LoginState>{
                 expiry:expiry_time
             }
 
-            sessionStorage.setItem("session",JSON.stringify(sessionData));
-            getUserRole();
 
-            
-            const userDetails=sessionStorage.getItem("userDetails")
-            const role = userDetails ? JSON.parse(userDetails).role : "unknown";
-
-            console.log(role)
-
-            if (role === "DRIVER"){
-                this.props.navigate("/driverHome")
-            }else if (role === "RIDER"){
-                this.props.navigate("/riderHome")
-            }else{
-                this.props.navigate("/home");
-            }
 
             
         }
