@@ -1,10 +1,12 @@
 package com.example.Rider_Co.controllers;
 
+import com.example.Rider_Co.authFilters.JwtAuthFilter;
 import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.serviceInterfaces.UserServiceInterface;
 import com.example.Rider_Co.services.UserService;
 import com.example.Rider_Co.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    JwtAuthFilter jwtAuthFilter;
 
     private final UserServiceInterface userService;
     private final JwtUtil jwtUtil;
@@ -67,5 +72,14 @@ public class UserController {
         } else {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
+    }
+
+    @GetMapping("/profile")
+
+    public  ResponseEntity<String> profile(@CookieValue("Token") String Token){
+
+        String username =jwtAuthFilter.extractUsername(Token);
+        return  ResponseEntity.ok("hello "+ username);
+
     }
 }

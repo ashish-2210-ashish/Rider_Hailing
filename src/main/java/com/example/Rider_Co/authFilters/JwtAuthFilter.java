@@ -51,7 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .getBody();
     }
 
-    private String extractUsername(String token) {
+    public String extractUsername(String token) {
         return extractClaims(token).getSubject();
     }
     @Override
