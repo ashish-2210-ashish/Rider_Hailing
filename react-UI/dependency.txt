@@ -1,0 +1,3 @@
+axios
+jwt-decode
+react-icons
