@@ -42,7 +42,8 @@ public class UserController {
             try{
                 ResponseCookie cookieToken =ResponseCookie.from("Token",token)
 
-                        .maxAge(60 * 60)
+                        .maxAge(60*60)
+                        .httpOnly(true)
                         .sameSite("Lax")
                         .secure(false)
                         .path("/")
@@ -51,7 +52,7 @@ public class UserController {
 
                 ResponseCookie cookieRole =ResponseCookie.from("Role",role)
 
-                        .maxAge(60 * 60)
+                        .maxAge(60*60)
                         .sameSite("Lax")
                         .secure(false)
                         .path("/")
