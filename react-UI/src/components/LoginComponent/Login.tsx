@@ -37,36 +37,10 @@ class Login extends Component<LoginProps,LoginState>{
         }
 
         try{
-            const response = await axios.post("http://localhost:8080/user/login",this.state);
+            const response = await axios.post("http://localhost:8080/user/login",this.state, {withCredentials: true},);
             alert('successfully logined ...');
-            const jwt_token=response.data.token;
-            console.log('token = ',jwt_token)
+            this.props.navigate("/home");
 
-            const expiry_time= new Date().getTime()+ 60 * 60 * 1000;
-
-            const sessionData={
-                token:jwt_token,
-                expiry:expiry_time
-            }
-
-            sessionStorage.setItem("session",JSON.stringify(sessionData));
-            getUserRole();
-
-            
-            const userDetails=sessionStorage.getItem("userDetails")
-            const role = userDetails ? JSON.parse(userDetails).role : "unknown";
-
-            console.log(role)
-
-            if (role === "DRIVER"){
-                this.props.navigate("/driverHome")
-            }else if (role === "RIDER"){
-                this.props.navigate("/riderHome")
-            }else{
-                this.props.navigate("/home");
-            }
-
-            
         }
         catch(e){
             console.error(e);
