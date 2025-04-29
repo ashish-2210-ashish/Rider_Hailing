@@ -199,6 +199,10 @@ Include project-specific visuals below:
 
 # API Documentation
 
+> ⚠️ **Warning**  
+> Drivers will have access to both **`/driver`** and **`/ride`** endpoints, while Riders will only have access to the **`/ride`** endpoint.
+
+
 ## User Authentication
 
 ### Login

@@ -45,19 +45,27 @@ public class SecurityConfig {
                                                    ApiKeyAuthFilter apiKeyAuthFilter) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(whitelist).permitAll()
-                                .requestMatchers("/driver/**", "/ride/**").hasRole("DRIVER")
-                                .requestMatchers("/rider/**").hasRole("RIDER")
-                                .requestMatchers("/api/**").hasAnyRole("DRIVER", "RIDER")
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-        )
+                        .requestMatchers(whitelist).permitAll()
+                        .requestMatchers("/driver/**", "/ride/**").hasRole("DRIVER")
+                        .requestMatchers("/rider/**").hasRole("RIDER")
+                        .requestMatchers("/api/**").hasAnyRole("DRIVER", "RIDER")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(403);  // HTTP 403 Forbidden
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Invalid Access: You don't have permission for this resource.\"}");
+                        })
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)  // API Key first
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);    // Then JWT
+                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
