@@ -1,6 +1,8 @@
 package com.example.Rider_Co.tests.controllerTests;
 
+import com.example.Rider_Co.models.Rider;
 import com.example.Rider_Co.models.User;
+import com.example.Rider_Co.repositories.UserRepository;
 import com.example.Rider_Co.services.UserService;
 import com.example.Rider_Co.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -27,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class UserControllerTest {
 
    @Autowired
@@ -35,16 +41,47 @@ class UserControllerTest {
    @Autowired
    private ObjectMapper objectMapper;
 
+   @Autowired
+   private UserRepository userRepository;
+
    @MockBean
    private UserService userService;
 
    @MockBean
    private JwtUtil jwtUtil;
 
+   @Autowired
+   private PasswordEncoder passwordEncoder;
+
    @BeforeEach
    void setUp() {
       // Nothing needed here since Spring handles context setup
    }
+
+   @Test
+   @DirtiesContext
+   void loginUserSuccess() throws Exception {
+      User user = new User();
+      user.setUsername("test1");
+      user.setPassword(passwordEncoder.encode("test1")); // Use encoded password
+      user.setRole("RIDER");
+      userRepository.save(user);
+
+      User loginRequest = new User();
+      loginRequest.setUsername("test1");
+      loginRequest.setPassword("test1"); // Raw password sent by client
+      loginRequest.setRole("RIDER");
+
+      System.out.println(">>> Request User: " + loginRequest);
+      System.out.println(">>> Stored User: " + user);
+
+      mockMvc.perform(post("/user/login")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(loginRequest)))
+              .andExpect(status().isOk());
+   }
+
+
 
    @Test
    void registerUserSuccess() throws Exception {
@@ -113,5 +150,26 @@ class UserControllerTest {
               .content(malformedJson))
               .andExpect(status().isBadRequest());
    }
+
+
+
+   @Test
+   void registerWithInvalidInput() throws Exception {
+      User user = User.builder()
+              .username(null)
+              .password("password")
+              .role("DRIVER")
+              .build();
+
+      when(userService.registerUser(any(User.class))).thenReturn("Invalid user input");
+
+      mockMvc.perform(post("/user/register")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(user)))
+              .andExpect(status().isBadRequest())
+              .andExpect(content().string("Invalid user input"));
+   }
+
+
 
 }
