@@ -19,13 +19,22 @@ public class UserService implements UserServiceInterface {
     }
     @Override
     public String registerUser(User user) {
+        if (user == null ||
+                user.getUsername() == null || user.getUsername().trim().isEmpty() ||
+                user.getPassword() == null || user.getPassword().trim().isEmpty() ||
+                user.getRole() == null || user.getRole().trim().isEmpty()) {
+            return "Invalid user input";
+        }
+
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             return "Username already taken";
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "User registered successfully!";
     }
+
     @Override
     public Optional<User> authenticate(String username, String rawPassword) {
         Optional<User> user = userRepository.findByUsername(username);

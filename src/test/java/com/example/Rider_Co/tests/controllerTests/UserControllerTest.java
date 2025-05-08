@@ -1,0 +1,117 @@
+package com.example.Rider_Co.tests.controllerTests;
+
+import com.example.Rider_Co.models.User;
+import com.example.Rider_Co.services.UserService;
+import com.example.Rider_Co.utils.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class UserControllerTest {
+
+   @Autowired
+   private MockMvc mockMvc;
+
+   @Autowired
+   private ObjectMapper objectMapper;
+
+   @MockBean
+   private UserService userService;
+
+   @MockBean
+   private JwtUtil jwtUtil;
+
+   @BeforeEach
+   void setUp() {
+      // Nothing needed here since Spring handles context setup
+   }
+
+   @Test
+   void registerUserSuccess() throws Exception {
+      User user = User.builder().username("ash").password("ash123").role("DRIVER").build();
+      when(userService.registerUser(any(User.class))).thenReturn("User registered successfully!");
+
+      mockMvc.perform(post("/user/register")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(user)))
+              .andExpect(status().isCreated())
+              .andExpect(content().string("User registered successfully!"));
+   }
+
+   @Test
+   void registerUserAlreadyExists() throws Exception {
+      User user = User.builder().username("ash").password("ash123").role("DRIVER").build();
+      when(userService.registerUser(any(User.class))).thenReturn("Username already taken");
+
+      mockMvc.perform(post("/user/register")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(user)))
+              .andExpect(status().isConflict())
+              .andExpect(content().string("Username already taken"));
+   }
+
+   @Test
+   void registerWithEmptyPayload() throws Exception {
+      mockMvc.perform(post("/user/register")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content("{}"))
+              .andExpect(status().isBadRequest());
+   }
+
+   @Test
+   void loginUserNotFound() throws Exception {
+      User user = User.builder()
+              .username("nonexistent")
+              .password("wrongpassword")
+              .build();
+
+      when(userService.authenticate("nonexistent", "wrongpassword")).thenReturn(Optional.empty());
+
+      mockMvc.perform(post("/user/login")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(user)))
+              .andExpect(status().isNotFound())
+              .andExpect(content().string("Invalid username or password"));
+   }
+
+   @Test
+   void loginWithMalformedJson() throws Exception {
+      String malformedJson = "{ \"username\": \"ash\", \"password\": \"ash123\""; // Missing closing brace
+
+      mockMvc.perform(post("/user/login")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(malformedJson))
+              .andExpect(status().isBadRequest());
+   }
+
+   @Test
+   void registerWithMalformedJson() throws Exception {
+      String malformedJson = "{\"username\": \"ash\", \"password\": \"ash123\", \"role\": \"RIDER\"";
+
+      mockMvc.perform(post("/user/register")
+                     .contentType(MediaType.APPLICATION_JSON)
+              .content(malformedJson))
+              .andExpect(status().isBadRequest());
+   }
+
+}

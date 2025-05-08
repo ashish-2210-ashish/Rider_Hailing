@@ -31,8 +31,21 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
-        return ResponseEntity.status(201).body(userService.registerUser(user));
+        String result = userService.registerUser(user);
+
+        if ("Username already taken".equals(result)) {
+            return ResponseEntity.status(409).body(result); // 409 Conflict
+        } else if ("User registered successfully!".equals(result)) {
+            return ResponseEntity.status(201).body(result); // 201 Created
+
+        }
+        else{
+            return ResponseEntity.badRequest().body(result); // badrequest
+
+        }
+
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response) {
@@ -65,7 +78,7 @@ public class UserController {
             }
 
         } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            return ResponseEntity.status(404).body("Invalid username or password");
         }
     }
 }
