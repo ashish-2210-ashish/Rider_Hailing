@@ -131,6 +131,8 @@
 
                         -Xshare:off
                     </argLine>
+                        <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+
                 </configuration>
             </plugin>
         </plugins>

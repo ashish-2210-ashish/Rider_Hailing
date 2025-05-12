@@ -30,4 +30,5 @@ public class Rider {
     @OneToMany(mappedBy = "rider", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Ride> rides;
+
 }
