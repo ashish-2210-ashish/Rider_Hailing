@@ -58,29 +58,6 @@ class UserControllerTest {
       // Nothing needed here since Spring handles context setup
    }
 
-   @Test
-   @DirtiesContext
-   void loginUserSuccess() throws Exception {
-      User user = new User();
-      user.setUsername("test1");
-      user.setPassword(passwordEncoder.encode("test1")); // Use encoded password
-      user.setRole("RIDER");
-      userRepository.save(user);
-
-      User loginRequest = new User();
-      loginRequest.setUsername("test1");
-      loginRequest.setPassword("test1"); // Raw password sent by client
-      loginRequest.setRole("RIDER");
-
-      System.out.println(">>> Request User: " + loginRequest);
-      System.out.println(">>> Stored User: " + user);
-
-      mockMvc.perform(post("/user/login")
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content(objectMapper.writeValueAsString(loginRequest)))
-              .andExpect(status().isOk());
-   }
-
 
 
    @Test
@@ -168,6 +145,30 @@ class UserControllerTest {
                       .content(objectMapper.writeValueAsString(user)))
               .andExpect(status().isBadRequest())
               .andExpect(content().string("Invalid user input"));
+   }
+
+
+   @Test
+   @DirtiesContext
+   void loginUserSuccess() throws Exception {
+      User user = new User();
+      user.setUsername("test1");
+      user.setPassword(passwordEncoder.encode("test1"));
+      user.setRole("RIDER");
+      userRepository.saveAndFlush(user);
+
+      User loginRequest = new User();
+      loginRequest.setUsername("test1");
+      loginRequest.setPassword("test1");
+      loginRequest.setRole("RIDER");
+
+      System.out.println("Request User: " + loginRequest);
+      System.out.println("Stored User: " + user);
+
+      mockMvc.perform(post("/user/login")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(loginRequest)))
+              .andExpect(status().isOk());
    }
 
 
