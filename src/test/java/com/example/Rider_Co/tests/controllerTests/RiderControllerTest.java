@@ -37,12 +37,15 @@ public class RiderControllerTest {
     private Rider rider;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String jwtToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2hAZ21haWwuY29tIiwicm9sZSI6IlJJREVSIiwiaWF0IjoxNzQ3MDQzNzk0LCJleHAiOjE3NDcwNDU1OTR9.noN1h1OnJ0qWVzEvq7qOS65HjmUpTN9BlBaL2PJG02E";
+    private final String jwtToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2hAZ21haWwuY29tIiwicm9sZSI6IlJJREVSIiwiaWF0IjoxNzQ3MDQ2MzI0LCJleHAiOjE3NDcwNDgxMjR9.UuGKcCWSaSAAC3LuaSkg4y9PpuGeeh1h5GPJVsvglIk";
 
     @BeforeEach
     void setUp() {
-
+        when(rider.getRiderId()).thenReturn(5);
+        when(rider.getCoordinateY()).thenReturn(23);
+        when(rider.getCoordinateX()).thenReturn(32);
     }
+
 
     @Test
     void testGetAllRiders() throws Exception {
