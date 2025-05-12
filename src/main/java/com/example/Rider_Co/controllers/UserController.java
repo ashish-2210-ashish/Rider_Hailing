@@ -49,36 +49,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response) {
-        Optional<User> loggedInUser = userService.authenticate(user.getUsername(), user.getPassword());
-
-        if (loggedInUser.isPresent()) {
-            String token = jwtUtil.generateToken(user.getUsername(),loggedInUser.get().getRole());
-            String role = loggedInUser.get().getRole();
-
-            try{
-                ResponseCookie tokenCookie = ResponseCookie.from("Token",token)
-                        .maxAge( 60 * 60)
-                        .secure(false)
-                        .path("/")
-                        .sameSite("Lax")
-                        .build();
-                response.addHeader(HttpHeaders.SET_COOKIE,tokenCookie.toString());
-
-                ResponseCookie roleCookie = ResponseCookie.from("Role",role)
-                        .maxAge( 60 * 60)
-                        .secure(false)
-                        .path("/")
-                        .sameSite("Lax")
-                        .build();
-                response.addHeader(HttpHeaders.SET_COOKIE,roleCookie.toString());
-
-                return  ResponseEntity.ok("cookie created correctly");
-            } catch (Exception e) {
-                return ResponseEntity.status(500).body("error in creating the cookie");
-            }
-
-        } else {
-            return ResponseEntity.status(404).body("Invalid username or password");
-        }
+        return userService.handleLogin(user, response);
     }
+
 }

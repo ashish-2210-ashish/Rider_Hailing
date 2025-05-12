@@ -91,7 +91,6 @@ class UserControllerTest {
                       .content("{}"))
               .andExpect(status().isBadRequest());
    }
-
    @Test
    void loginUserNotFound() throws Exception {
       User user = User.builder()
@@ -109,6 +108,23 @@ class UserControllerTest {
    }
 
    @Test
+   void loginUserInvalidPassword() throws Exception {
+      User user = User.builder()
+              .username("existingUser")
+              .password("wrongpassword")
+              .build();
+
+      when(userService.authenticate("existingUser", "wrongpassword")).thenReturn(Optional.empty());
+
+      mockMvc.perform(post("/user/login")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(user)))
+              .andExpect(status().isNotFound())
+              .andExpect(content().string("Invalid username or password"));
+   }
+
+   @Test
+   @DirtiesContext
    void loginWithMalformedJson() throws Exception {
       String malformedJson = "{ \"username\": \"ash\", \"password\": \"ash123\""; // Missing closing brace
 
@@ -161,9 +177,6 @@ class UserControllerTest {
       loginRequest.setUsername("test1");
       loginRequest.setPassword("test1");
       loginRequest.setRole("RIDER");
-
-      System.out.println("Request User: " + loginRequest);
-      System.out.println("Stored User: " + user);
 
       mockMvc.perform(post("/user/login")
                       .contentType(MediaType.APPLICATION_JSON)
