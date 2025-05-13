@@ -41,11 +41,8 @@ public class RiderControllerTest {
 
     @BeforeEach
     void setUp() {
-        when(rider.getRiderId()).thenReturn(5);
-        when(rider.getCoordinateY()).thenReturn(23);
-        when(rider.getCoordinateX()).thenReturn(32);
-    }
 
+    }
 
     @Test
     void testGetAllRiders() throws Exception {

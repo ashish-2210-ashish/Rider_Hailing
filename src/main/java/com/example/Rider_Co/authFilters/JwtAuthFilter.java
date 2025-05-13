@@ -84,7 +84,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             Optional<User> userOptional = userRepository.findByUsername(username);
             if (userOptional.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\": \"User not found.\"}");
                 return;
