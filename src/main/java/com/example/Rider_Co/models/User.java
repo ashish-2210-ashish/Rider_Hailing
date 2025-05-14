@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"password"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
