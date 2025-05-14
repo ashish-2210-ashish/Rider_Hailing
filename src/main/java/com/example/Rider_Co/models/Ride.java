@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -46,7 +48,7 @@ public class Ride {
     private RideStatus status = RideStatus.AVAILABLE_RIDE;
 
     @Column(nullable = false)
-    private double rideFare;
+    private BigDecimal rideFare;
 
     @Column(nullable = false)
     private double timeTaken;

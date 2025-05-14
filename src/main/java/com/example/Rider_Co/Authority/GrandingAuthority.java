@@ -1,4 +1,4 @@
-package com.example.Rider_Co.services;
+package com.example.Rider_Co.Authority;
 
 import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.repositories.UserRepository;
@@ -24,6 +24,5 @@ public class GrandingAuthority implements UserDetailsService {
                 user.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_"+user.getRole().toUpperCase()))
         );
-
     }
 }

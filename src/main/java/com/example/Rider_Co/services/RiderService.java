@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,7 +147,7 @@ public class RiderService implements RiderServiceInterface {
         ride.setPickupCoordinateY(rider.getCoordinateY());
         ride.setDestinationCoordinateX(destinationCoordinateX);
         ride.setDestinationCoordinateY(destinationCoordinateY);
-        ride.setRideFare(0);
+        ride.setRideFare(BigDecimal.ZERO);
         ride.setTimeTaken(0);
 
         // Debugging: Log ride details before saving

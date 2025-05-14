@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -151,7 +153,7 @@ public class RideService implements RideServiceInterface {
             return "Ride " + rideId + " does not exist.";
         }
 
-        if (currentRide.getRideFare() != 0) {
+        if (currentRide.getRideFare().compareTo(BigDecimal.ZERO) != 0) {
             logger.info("Ride {} already has a fare calculated: Rs. {}", rideId, currentRide.getRideFare());
             return "Total fare of the ride " + rideId + " is Rs. " + currentRide.getRideFare();
         }
@@ -160,10 +162,16 @@ public class RideService implements RideServiceInterface {
                 currentRide.getPickupCoordinateX(), currentRide.getPickupCoordinateY(),
                 currentRide.getDestinationCoordinateX(), currentRide.getDestinationCoordinateY()
         );
-        double timeFare = 2 * currentRide.getTimeTaken();
-        double distanceFare = 6.5 * distance;
-        double baseFare = 50;
-        double totalFare = (baseFare + distanceFare + timeFare) * 1.2; // Including 20% tax
+
+        BigDecimal baseFare = BigDecimal.valueOf(50);
+        BigDecimal timeFare = BigDecimal.valueOf(2).multiply(BigDecimal.valueOf(currentRide.getTimeTaken()));
+        BigDecimal distanceFare = BigDecimal.valueOf(6.5).multiply(BigDecimal.valueOf(distance));
+        BigDecimal subtotal = baseFare.add(timeFare).add(distanceFare);
+        BigDecimal taxMultiplier = BigDecimal.valueOf(1.2);
+        BigDecimal totalFare = subtotal.multiply(taxMultiplier);
+
+        // Round to 2 decimal places (currency format)
+        totalFare = totalFare.setScale(2, RoundingMode.HALF_UP);
 
         currentRide.setRideFare(totalFare);
         rideRepository.save(currentRide);
@@ -171,6 +179,7 @@ public class RideService implements RideServiceInterface {
         logger.info("Ride {} billed successfully. Total fare: Rs. {}", rideId, totalFare);
         return "Total fare of the ride " + rideId + " is Rs. " + totalFare;
     }
+
 
 
     private void releaseDriver(int driverId) {
