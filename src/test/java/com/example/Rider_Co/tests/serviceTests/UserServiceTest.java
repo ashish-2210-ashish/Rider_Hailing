@@ -122,5 +122,90 @@ class UserServiceTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(401);
         assertThat(response.getBody()).isEqualTo("Invalid username or password");
     }
+
+    @Test
+    void registerUser_returnsError_whenUserIsNull() {
+        String result = userService.registerUser(null);
+        assertThat(result).isEqualTo("Invalid user input");
+    }
+
+
+    @Test
+    void registerUser_returnsError_whenFieldsAreEmpty() {
+        User user = User.builder()
+                .username("")
+                .password("")
+                .role("")
+                .build();
+        String result = userService.registerUser(user);
+        assertThat(result).isEqualTo("Invalid user input");
+    }
+
+
+    @Test
+    void registerUser_returnsError_whenFieldsAreNull() {
+        User user = User.builder()
+                .username(null)
+                .password(null)
+                .role(null)
+                .build();
+        String result = userService.registerUser(user);
+        assertThat(result).isEqualTo("Invalid user input");
+    }
+
+
+    @Test
+    void handleLogin_returnsServerError_whenCookieCreationFails() {
+        String rawPassword = "password";
+        String encodedPassword = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(rawPassword);
+
+        User user = User.builder()
+                .username("testuser")
+                .password(rawPassword)
+                .role("RIDER")
+                .build();
+
+        User storedUser = User.builder()
+                .username("testuser")
+                .password(encodedPassword)
+                .role("RIDER")
+                .build();
+
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(storedUser));
+        when(jwtUtil.generateToken("testuser", "RIDER")).thenReturn("mocked-jwt");
+
+        // Simulate exception on addHeader
+        doThrow(new RuntimeException("Simulated error")).when(httpServletResponse).addHeader(anyString(), anyString());
+
+        ResponseEntity<?> response = userService.handleLogin(user, httpServletResponse);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(500);
+        assertThat(response.getBody()).isEqualTo("error in creating the cookie");
+    }
+
+
+    @Test
+    void registerUser_returnsError_whenUsernameIsEmpty() {
+        User user = User.builder().username(" ").password("pass").role("RIDER").build();
+        String result = userService.registerUser(user);
+        assertThat(result).isEqualTo("Invalid user input");
+    }
+
+    @Test
+    void registerUser_returnsError_whenPasswordIsEmpty() {
+        User user = User.builder().username("test").password("").role("RIDER").build();
+        String result = userService.registerUser(user);
+        assertThat(result).isEqualTo("Invalid user input");
+    }
+
+    @Test
+    void registerUser_returnsError_whenRoleIsNull() {
+        User user = User.builder().username("test").password("pass").role(null).build();
+        String result = userService.registerUser(user);
+        assertThat(result).isEqualTo("Invalid user input");
+    }
+
+
+
 }
 
