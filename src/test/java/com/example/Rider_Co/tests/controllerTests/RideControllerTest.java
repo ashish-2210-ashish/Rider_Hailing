@@ -1,6 +1,5 @@
 package com.example.Rider_Co.tests.controllerTests;
 
-
 import com.example.Rider_Co.controllers.RideController;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.serviceInterfaces.RideServiceInterface;
@@ -13,11 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

@@ -1,20 +1,15 @@
 package com.example.Rider_Co.tests.serviceTests;
 
-
-
 import com.example.Rider_Co.Authority.GrandingAuthority;
 import com.example.Rider_Co.models.User;
 import com.example.Rider_Co.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -33,7 +28,6 @@ public class GrandingAuthorityTest {
 
     @Test
     public void testLoadUserByUsername_UserExists() {
-        // Arrange
         User user = new User();
         user.setUsername("john_doe");
         user.setPassword("password123");

@@ -64,7 +64,6 @@ class UserControllerTest {
    void registerUserSuccess() throws Exception {
       User user = User.builder().username("ash").password("ash123").role("DRIVER").build();
       when(userService.registerUser(any(User.class))).thenReturn("User registered successfully!");
-
       mockMvc.perform(post("/user/register")
                       .contentType(MediaType.APPLICATION_JSON)
                       .content(objectMapper.writeValueAsString(user)))
@@ -76,7 +75,6 @@ class UserControllerTest {
    void registerUserAlreadyExists() throws Exception {
       User user = User.builder().username("ash").password("ash123").role("DRIVER").build();
       when(userService.registerUser(any(User.class))).thenReturn("Username already taken");
-
       mockMvc.perform(post("/user/register")
                       .contentType(MediaType.APPLICATION_JSON)
                       .content(objectMapper.writeValueAsString(user)))
@@ -97,9 +95,7 @@ class UserControllerTest {
               .username("nonexistent")
               .password("wrongpassword")
               .build();
-
       when(userService.authenticate("nonexistent", "wrongpassword")).thenReturn(Optional.empty());
-
       mockMvc.perform(post("/user/login")
                       .contentType(MediaType.APPLICATION_JSON)
                       .content(objectMapper.writeValueAsString(user)))
