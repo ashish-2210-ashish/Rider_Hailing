@@ -34,7 +34,7 @@ public class RiderControllerTest {
     private Rider rider;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String jwtToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2hAZ21haWwuY29tIiwicm9sZSI6IlJJREVSIiwiaWF0IjoxNzQ3NzE3MDY0LCJleHAiOjE3NDc4MDM0NjR9.FNQA2ZtuiZez3X0E2k03_MFUAQ4KpVKEvJiD7ir5wwU";
+    private final String jwtToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2hAZ21haWwuY29tIiwicm9sZSI6IlJJREVSIiwiaWF0IjoxNzQ3ODg5MjY4LCJleHAiOjE3NDc5NzU2Njh9.RdQjI6rxT0NOJqUob0knccH_4BiD5wIXA9YJp8q4bZc";
 
     @BeforeEach
     void setUp() {

@@ -32,7 +32,7 @@ public class DriverControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final String jwtToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkcml2ZXJAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc0NzcxNzE1NSwiZXhwIjoxNzQ3ODAzNTU1fQ.qm3eqXfn7DY7YOATqNLHqGb-_eN3dFSKadNwZSaVKw8";
+    private final String jwtToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkcml2ZXJAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc0Nzg4OTMyNiwiZXhwIjoxNzQ3OTc1NzI2fQ.XuliEQQ6ByC0uMhxV7wXBFJZmxtJ-fv4eCzGL6Le1XY";
 
     @Test
     void testGetAllDrivers() throws Exception {
