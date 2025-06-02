@@ -1,99 +1,90 @@
-import React ,{ Component } from "react"
+import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { FaEyeSlash,FaEye } from "react-icons/fa";
-import './Register.scss'
+import { Link, useNavigate } from "react-router-dom";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
+import './Register.scss';
 
-type RegisterState={
-  username :string;
-  password :string;
-  showpassword : boolean;
-  role :string;
-}
+const Register: React.FC = () => {
+  const navigate = useNavigate();
 
-type RegisterProps={
-  navigate : (path : string) => void;
-}
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    role: "RIDER",
+    showPassword: false
+  });
 
-class Register extends Component<RegisterProps,RegisterState>{
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-constructor(props : RegisterProps){
-  super(props);
-  this.state={
-    username:"",
-    password:"",
-    role:"RIDER",
-    showpassword:false
-  }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const { username, password, role } = formData;
 
-}
+    if (!username || !password) {
+      alert("Username and password cannot be empty !!!");
+      return;
+    }
 
-handelsubmit=async(event : React.FormEvent)=>{
-  event.preventDefault();
-  const {username,password}=this.state;
+    try {
+      const response = await axios.post("http://localhost:8080/user/register", {
+        username,
+        password,
+        role
+      });
+      alert(response.data);
+      navigate("/login");
+    } catch (e: any) {
+      console.error(e);
+      alert(e.response?.data || "Registration failed");
+    }
+  };
 
-  if(!username || !password){
-    alert("username nad password cannot be empty !!!")
-    return;
-  }
-  try {
-    const response = await axios.post("http://localhost:8080/user/register", this.state);
-    console.log(response);
-    alert(response.data);
-    this.props.navigate("/login");
-  } catch (e: any) {
-    console.error(e);
-    alert(e.response?.data || "Registration failed");
-  }
-}
+  const togglePasswordVisibility = () => {
+    setFormData(prev => ({ ...prev, showPassword: !prev.showPassword }));
+  };
 
-handelchange=(event:any)=>{
-  this.setState({[event.target.name] : event.target.value})
-
-}
-
-render(){
-  return(
+  return (
     <div id='register-container'>
-       <form onSubmit={this.handelsubmit}>
-      <h1>Register</h1>
-      <input name="username"
-      placeholder="enter username"
-      type="email"
-      value={this.state.username}
-      onChange={this.handelchange}
-      />
+      <form onSubmit={handleSubmit}>
+        <h1>Register</h1>
 
-    <div className="password-wrapper">
-      <input name="password"
-        placeholder="enter password"
-        type={this.state.showpassword?"text":"password"}
-        value={this.state.password}
-        onChange={this.handelchange}
-      />
-      <span 
-      className="eye-icon"
-      onClick={()=>{this.setState({showpassword:!this.state.showpassword})}}>
-        {this.state.showpassword? <FaEyeSlash/> : <FaEye/>}
-      </span>
-    </div>
-    <select name="role"
-     value={this.state.role}
-     onChange={this.handelchange}>
+        <input
+          name="username"
+          placeholder="Enter username"
+          type="email"
+          value={formData.username}
+          onChange={handleChange}
+        />
+
+        <div className="password-wrapper">
+          <input
+            name="password"
+            placeholder="Enter password"
+            type={formData.showPassword ? "text" : "password"}
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <span className="eye-icon" onClick={togglePasswordVisibility}>
+            {formData.showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
+
+        <select name="role" value={formData.role} onChange={handleChange}>
           <option value="RIDER">RIDER</option>
           <option value="DRIVER">DRIVER</option>
-    </select>
+        </select>
 
-    <button type="submit">Register</button>
+        <button type="submit">Register</button>
 
-    <p>Already registered? <Link to ="/login">login here.</Link> </p>
-     
-     
-    </form>
+        <p>
+          Already registered? <Link to="/login">Login here.</Link>
+        </p>
+      </form>
     </div>
-    
-  )}
-}
+  );
+};
 
-
-export default Register
+export default Register;

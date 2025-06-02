@@ -1,94 +1,179 @@
-import React,{Component} from "react";
-import axios from "axios";
-import { Link,Navigate,useNavigate } from "react-router-dom";
-import { FaEyeSlash,FaEye } from "react-icons/fa";
-import { getUserRole } from "../../utils/auth";
-import './Login.scss'
+import React, {useState} from "react";
+import { axios } from "axios";
+import './Login.scss';
+import { Link, useNavigate } from "react-router-dom";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
-type LoginState={
-    username : string;
-    password : string; 
-    showpassword : boolean;
-}
+const Login : React.FC = () => {
+    const navigate = useNavigate();
+    const [username,setUsername] = useState<string>("");
+    const [password,setPassword] = useState<string>("");
+    const [showpassword,setShowpassword] = useState<boolean>(false);
 
-type LoginProps={
-    navigate : (path:string) => void;
-}
+    const handleSubmit = async (event : React.FormEvent) => {
 
-class Login extends Component<LoginProps,LoginState>{
-
-    constructor(props : LoginProps){
-        super(props);
-
-        this.state={
-            username:"",
-            password:"",
-            showpassword:false
-        }
-    }
-
-    handlesubmit=async (event :React.FormEvent)=>{
         event.preventDefault();
-        const {username,password}=this.state;
-
-        if(!username || !password){
-          alert("username nad password cannot be empty !!!")
-          return;
+        
+        if (!username || !password){
+            alert("Username and password cannot be empty!");
+            return ;
         }
 
         try{
-            const response = await axios.post("http://localhost:8080/user/login",this.state, {withCredentials: true},);
-            alert('successfully logined ...');
-            this.props.navigate("/home");
-
-        }
-        catch(e){
+            const response= await axios.post(
+            "http://localhost:8080/user/login",
+            {username,password},
+            { withCredentials: true }
+        );
+        alert("Successfully logged in ....");
+        navigate("/home");
+        }catch(e){
             console.error(e);
-            alert('logined failed ...\n(invalid username or password)')
+            alert("Login failed...\n(Invalid username or password)");
+
         }
+
+
     }
 
-    handlechange=(event : any)=>{
-        this.setState({[event.target.name] : event.target.value})
-    }
-
-    render(){
-        return(
-            <div id='login-container'>
-                <form onSubmit={this.handlesubmit}>
+    return (
+        <div id="login-container">
+            <form onSubmit={handleSubmit}>
                 <h1>Login</h1>
-                <input name="username"
-                placeholder="enter username"
-                type="email"
-                value={this.state.username}
-                onChange={this.handlechange}
+
+                <input
+                    name="username"
+                    placeholder="Enter username"
+                    type="email"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
 
                 <div className="password-wrapper">
-                    <input name="password"
-                    placeholder="enter password"
-                    type={this.state.showpassword ? "text":"password"}
-                    value={this.state.password}
-                    onChange={this.handlechange}
+                    <input
+                        name="password"
+                        placeholder="Enter password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-
-                    <span 
-                    className="eye-icon"
-                    onClick={()=>{this.setState({showpassword:!this.state.showpassword})}}>
-                        {this.state.showpassword?<FaEyeSlash/> : <FaEye/>}
+                    <span
+                        className="eye-icon"
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </span>
-
                 </div>
 
-                <button type="submit"> Login</button>
+                <button type="submit">Login</button>
 
-                <p>Don't hava an account?<Link to ="/register"> register here </Link></p>
-                </form>
-            </div>
-        )
+                <p>
+                    Don't have an account?{" "}
+                    <Link to="/register">Register here</Link>
+                </p>
+            </form>
+        </div>
+    );
+};
 
-    }
-}
 
 
-export default Login
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState } from "react";
+// import axios from "axios";
+// import { Link, useNavigate } from "react-router-dom";
+// import { FaEyeSlash, FaEye } from "react-icons/fa";
+// import './Login.scss';
+
+// const Login: React.FC = () => {
+//     const navigate = useNavigate();
+
+//     // State variables
+//     const [username, setUsername] = useState<string>("");
+//     const [password, setPassword] = useState<string>("");
+//     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+//     // Submit handler
+//     const handleSubmit = async (event: React.FormEvent) => {
+//         event.preventDefault();
+
+//         if (!username || !password) {
+//             alert("Username and password cannot be empty!!!");
+//             return;
+//         }
+
+//         try {
+//             const response = await axios.post(
+//                 "http://localhost:8080/user/login",
+//                 { username, password },
+//                 { withCredentials: true }
+//             );
+
+//             alert("Successfully logged in...");
+//             navigate("/home");
+//         } catch (e) {
+//             console.error(e);
+//             alert("Login failed...\n(Invalid username or password)");
+//         }
+//     };
+
+//     return (
+//         <div id="login-container">
+//             <form onSubmit={handleSubmit}>
+//                 <h1>Login</h1>
+
+//                 <input
+//                     name="username"
+//                     placeholder="Enter username"
+//                     type="email"
+//                     value={username}
+//                     onChange={(e) => setUsername(e.target.value)}
+//                 />
+
+//                 <div className="password-wrapper">
+//                     <input
+//                         name="password"
+//                         placeholder="Enter password"
+//                         type={showPassword ? "text" : "password"}
+//                         value={password}
+//                         onChange={(e) => setPassword(e.target.value)}
+//                     />
+//                     <span
+//                         className="eye-icon"
+//                         onClick={() => setShowPassword(!showPassword)}
+//                     >
+//                         {showPassword ? <FaEyeSlash /> : <FaEye />}
+//                     </span>
+//                 </div>
+
+//                 <button type="submit">Login</button>
+
+//                 <p>
+//                     Don't have an account?{" "}
+//                     <Link to="/register">Register here</Link>
+//                 </p>
+//             </form>
+//         </div>
+//     );
+// };
+
+// export default Login;
