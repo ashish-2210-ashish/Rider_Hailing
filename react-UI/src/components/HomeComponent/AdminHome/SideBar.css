@@ -1,4 +1,4 @@
-/* Sidebar container */
+/* Base sidebar styles */
 .sidebar {
   height: 100vh;
   width: 200px;
@@ -9,9 +9,32 @@
   position: fixed;
   left: 0;
   top: 0;
+  transition: transform 0.3s ease;
 }
 
-/* Style for the links */
+/* Sidebar open and closed state */
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* Toggle button styles */
+.toggle-button {
+  position: fixed;
+  top: 20px;
+  left: 210px;
+  z-index: 1000;
+  background-color: #1e1e2f;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* Sidebar links */
 .sidebar a {
   padding: 15px 20px;
   text-decoration: none;
@@ -20,13 +43,14 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect */
 .sidebar a:hover {
   background-color: #33334d;
   color: #00ffff;
 }
 
-/* Active route link style (optional, if using NavLink) */
-.sidebar a.active {
-  background-color: #444466;
+.logout-link {
+  margin-top: auto;
+  padding: 15px 20px;
+  background-color: #ff4444;
+  text-align: center;
 }

@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './SideBar.css'
+import './SideBar.css';
 
 const Sidebar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
   return (
-    <div className="sidebar">
-      <Link to="/home">Home</Link>
-      <Link to="/rider">Rider</Link>
-      <Link to="/driver">Driver</Link>
-      <button>
-        <Link to="/login">Logout</Link>
+    <>
+      <button className="toggle-button" onClick={toggleSidebar}>
+        {isOpen ? '⬅' : '➡'}
       </button>
-    </div>
+      <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
+        <Link to="/home">Home</Link>
+        <Link to="/rider">Rider</Link>
+        <Link to="/driver">Driver</Link>
+        <Link to="/login" className="logout-link">Logout</Link>
+      </div>
+    </>
   );
 };
 
