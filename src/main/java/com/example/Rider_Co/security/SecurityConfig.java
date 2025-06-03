@@ -46,11 +46,10 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(whitelist).permitAll()
+                        .requestMatchers("/driver/**","/rider/**", "/ride/**","/api/**","/user/**").hasRole("ADMIN")
                                 .requestMatchers("/driver/**", "/ride/**").hasRole("DRIVER")
                                 .requestMatchers("/rider/**").hasRole("RIDER")
                                 .requestMatchers("/api/**").hasAnyRole("DRIVER", "RIDER")
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
         )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

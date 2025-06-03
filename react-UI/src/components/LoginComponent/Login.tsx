@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { axios } from "axios";
+import  axios  from "axios";
 import './Login.scss';
 import { Link, useNavigate } from "react-router-dom";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
@@ -8,7 +8,7 @@ const Login : React.FC = () => {
     const navigate = useNavigate();
     const [username,setUsername] = useState<string>("");
     const [password,setPassword] = useState<string>("");
-    const [showpassword,setShowpassword] = useState<boolean>(false);
+    const [showPassword,setShowPassword] = useState<boolean>(false);
 
     const handleSubmit = async (event : React.FormEvent) => {
 
@@ -75,6 +75,8 @@ const Login : React.FC = () => {
         </div>
     );
 };
+
+export default Login;
 
 
 

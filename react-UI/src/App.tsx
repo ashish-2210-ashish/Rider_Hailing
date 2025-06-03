@@ -1,7 +1,7 @@
 import { Component } from "react";
-import RegisterWrapper from "./components/RegisterComponent/RegisterWrapper";
+import Register from "./components/RegisterComponent/Register";
 import Home from "./components/HomeComponent/Home";
-import LoginWrapper from "./components/LoginComponent/LoginWrapper";
+import Login from "./components/LoginComponent/Login";
 import DriverHome from "./components/HomeComponent/DriverHome/DriverHome";
 import RiderHome from "./components/HomeComponent/RiderHome/RiderHome";
 import { BrowserRouter as Router,Route ,Routes , Navigate} from "react-router-dom";
@@ -14,8 +14,8 @@ class App extends Component {
          <div id='application-container'>
         <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/login" element={< LoginWrapper/>} />
-          <Route path="/register" element={< RegisterWrapper/>} />
+          <Route path="/login" element={< Login/>} />
+          <Route path="/register" element={< Register/>} />
           <Route path="/home" element={< Home/>} />
           <Route path="/driverHome" element={< DriverHome/>} />
           <Route path="/riderHome" element={< RiderHome/>} />
