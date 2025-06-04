@@ -16,12 +16,12 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Sidebar/>
+     
       {/* <button>
         <Link to="/login">Logout</Link>
-      </button> */}
+      </button>
 
-      {/* <p>This is the Admin home page.</p>
+      <p>This is the Admin home page.</p>
       <p><strong>Token:</strong> {token || "No token available"}</p>
       <p><strong>Role:</strong> {role || "No role available"}</p> */}
     </div>

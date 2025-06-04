@@ -5,7 +5,7 @@ const AdminRide: React.FC = () =>{
 
     return (
         <div>
-            <Sidebar />
+         
 
             <p>This is admin (ride) panel</p>
         </div>

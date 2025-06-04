@@ -26,7 +26,7 @@ const Login : React.FC = () => {
             { withCredentials: true }
         );
         alert("Successfully logged in ....");
-        navigate("/home");
+        navigate("/adminlayout");
         }catch(e){
             console.error(e);
             alert("Login failed...\n(Invalid username or password)");

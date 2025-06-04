@@ -8,17 +8,19 @@ const Sidebar: React.FC = () => {
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
-    <>
-      <button className="toggle-button" onClick={toggleSidebar}>
-        {isOpen ? '⬅' : '➡'}
-      </button>
-      <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-        <Link to="/home">Home</Link>
-        <Link to="/rider">Rider</Link>
-        <Link to="/driver">Driver</Link>
-        <Link to="/login" className="logout-link">Logout</Link>
-      </div>
-    </>
+    
+        <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
+        <button className="toggle-button" onClick={toggleSidebar}>
+            {isOpen ? '⬅' : '➡'}
+        </button>
+            <Link to="home">Home</Link>
+            <Link to="rider">Rider</Link>
+            <Link to="driver">Driver</Link>
+            <Link to="ride">Ride</Link>
+            <Link to="api">API</Link>
+            <Link to="/login" className="logout-link">Logout</Link>
+        </div>
+    
   );
 };
 

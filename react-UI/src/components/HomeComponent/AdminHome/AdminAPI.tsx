@@ -5,7 +5,7 @@ const AdminAPI: React.FC = () =>{
 
     return (
         <div>
-            <Sidebar />
+           
 
             <p>This is admin (API) panel</p>
         </div>

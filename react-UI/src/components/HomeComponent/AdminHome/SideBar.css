@@ -14,7 +14,7 @@
 
 /* Sidebar open and closed state */
 .sidebar.closed {
-  transform: translateX(-100%);
+  transform: translateX(-80%);
 }
 
 .sidebar.open {
@@ -25,7 +25,7 @@
 .toggle-button {
   position: fixed;
   top: 20px;
-  left: 210px;
+  left: 160px;
   z-index: 1000;
   background-color: #1e1e2f;
   color: white;
@@ -36,7 +36,7 @@
 
 /* Sidebar links */
 .sidebar a {
-  padding: 15px 20px;
+  padding: 25px 20px;
   text-decoration: none;
   font-size: 16px;
   color: #ffffff;
