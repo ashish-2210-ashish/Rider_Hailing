@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,23 +41,40 @@ public class SecurityConfig {
         return new ApiKeyAuthFilter(apiKeyService, apiKeyRepository, passwordEncoder);
     }
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+//                                                   ApiKeyAuthFilter apiKeyAuthFilter) throws Exception {
+//        http.csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(auth -> auth
+//                                .requestMatchers(whitelist).permitAll()
+//                        .requestMatchers("/driver/**","/rider/**", "/ride/**","/api/**","/user/**").hasRole("ADMIN")
+//                                .requestMatchers("/driver/**", "/ride/**").hasRole("DRIVER")
+//                                .requestMatchers("/rider/**").hasRole("RIDER")
+//                                .requestMatchers("/api/**").hasAnyRole("DRIVER", "RIDER")
+//                                .anyRequest().authenticated()
+//        )
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)  // API Key first
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);    // Then JWT
+//        return http.build();
+//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    ApiKeyAuthFilter apiKeyAuthFilter) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+                .cors(Customizer.withDefaults()) // Enable CORS
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(whitelist).permitAll()
-                        .requestMatchers("/driver/**","/rider/**", "/ride/**","/api/**","/user/**").hasRole("ADMIN")
-                                .requestMatchers("/driver/**", "/ride/**").hasRole("DRIVER")
-                                .requestMatchers("/rider/**").hasRole("RIDER")
-                                .requestMatchers("/api/**").hasAnyRole("DRIVER", "RIDER")
-                                .anyRequest().authenticated()
-        )
+                        .anyRequest().permitAll() // 💥 Allow ALL requests unconditionally
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)  // API Key first
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);    // Then JWT
+                .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
