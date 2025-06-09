@@ -68,6 +68,9 @@ public class DriverService implements DriverServiceInterface {
     @Override
     public String AddDriver(Driver driver) {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (username=="admin@gmail.com"){
+            username=driver.getUser().getUsername();
+        }
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             return "User not found.";
