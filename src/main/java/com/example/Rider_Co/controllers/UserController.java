@@ -10,6 +10,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(
@@ -81,4 +82,15 @@ public class UserController {
             return ResponseEntity.status(404).body("Invalid username or password");
         }
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to retrieve users");
+        }
+    }
+
 }
