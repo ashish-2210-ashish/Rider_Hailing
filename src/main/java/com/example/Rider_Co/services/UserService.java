@@ -47,4 +47,10 @@ public class UserService implements UserServiceInterface {
         return userRepository.findAll();
     }
 
+    @Override
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+
 }
