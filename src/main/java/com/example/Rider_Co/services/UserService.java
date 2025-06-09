@@ -6,6 +6,7 @@ import com.example.Rider_Co.serviceInterfaces.UserServiceInterface;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,4 +41,10 @@ public class UserService implements UserServiceInterface {
         Optional<User> user = userRepository.findByUsername(username);
         return user.filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()));
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
 }
