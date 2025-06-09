@@ -9,4 +9,6 @@ public interface UserServiceInterface {
     String registerUser(User user);
     Optional<User> authenticate(String username, String rawPassword);
     List<User> getAllUsers();
+    Optional<User> getUserById(Long id);
+
 }
