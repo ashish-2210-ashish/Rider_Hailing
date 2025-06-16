@@ -59,27 +59,57 @@ public class DriverService implements DriverServiceInterface {
         }
     }
 
-    /**
-     * Adds a new driver to the system.
-     * @param driver Driver object to be added.
-     * @return Success message.
-     */
+//    /**
+//     * Adds a new driver to the system.
+//     * @param driver Driver object to be added.
+//     * @return Success message.
+//     */
+//
+//    @Override
+//    public String AddDriver(Driver driver) {
+//        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if (username=="admin@gmail.com"){
+//            username=driver.getUser().getUsername();
+//        }
+//        Optional<User> userOptional = userRepository.findByUsername(username);
+//        if (userOptional.isEmpty()) {
+//            return "User not found.";
+//        }
+//        driver.setUser(userOptional.get());
+//        driverRepository.save(driver);
+//        logger.info("Driver with ID: {} added successfully", driver.getDriverId());
+//        return "Successfully added the driver with ID: " + driver.getDriverId();
+//    }
+
+
+
 
     @Override
     public String AddDriver(Driver driver) {
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (username=="admin@gmail.com"){
-            username=driver.getUser().getUsername();
+        String loggedInUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String actualUsername;
+
+        if (loggedInUsername.equals("admin@gmail.com")) {
+            if (driver.getUser() == null || driver.getUser().getUsername() == null) {
+                return "Admin must provide a username to assign the driver.";
+            }
+            actualUsername = driver.getUser().getUsername();
+        } else {
+            actualUsername = loggedInUsername;
         }
-        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        Optional<User> userOptional = userRepository.findByUsername(actualUsername);
         if (userOptional.isEmpty()) {
             return "User not found.";
         }
+
         driver.setUser(userOptional.get());
         driverRepository.save(driver);
         logger.info("Driver with ID: {} added successfully", driver.getDriverId());
         return "Successfully added the driver with ID: " + driver.getDriverId();
     }
+
 
 
     /**
